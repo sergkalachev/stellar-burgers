@@ -3,21 +3,37 @@ import styles from './burger-constructor-element.module.css';
 import { ConstructorElement } from '@zlden/react-developer-burger-ui-components';
 import { BurgerConstructorElementUIProps } from './type';
 import { MoveButton } from '@zlden/react-developer-burger-ui-components';
+import {
+  moveIngredient,
+  removeIngredient
+} from '../../../services/slices/constructorSlice';
+import { useDispatch } from 'react-redux';
 
 export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
-  memo(
-    ({
-      ingredient,
-      index,
-      totalItems,
-      handleMoveUp,
-      handleMoveDown,
-      handleClose
-    }) => (
+  memo(({ ingredient, index, totalItems, handleClose }) => {
+    const dispatch = useDispatch();
+
+    const moveUp = () => {
+      if (index > 0) {
+        dispatch(moveIngredient({ fromIndex: index, toIndex: index - 1 }));
+      }
+    };
+
+    const moveDown = () => {
+      if (index < totalItems - 1) {
+        dispatch(moveIngredient({ fromIndex: index, toIndex: index + 1 }));
+      }
+    };
+
+    const handleRemove = () => {
+      dispatch(removeIngredient(ingredient.id));
+    };
+
+    return (
       <li className={`${styles.element} mb-4 mr-2`}>
         <MoveButton
-          handleMoveDown={handleMoveDown}
-          handleMoveUp={handleMoveUp}
+          handleMoveDown={moveDown}
+          handleMoveUp={moveUp}
           isUpDisabled={index === 0}
           isDownDisabled={index === totalItems - 1}
         />
@@ -26,9 +42,9 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
             text={ingredient.name}
             price={ingredient.price}
             thumbnail={ingredient.image}
-            handleClose={handleClose}
+            handleClose={handleRemove}
           />
         </div>
       </li>
-    )
-  );
+    );
+  });
