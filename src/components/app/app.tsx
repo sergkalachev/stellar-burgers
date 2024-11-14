@@ -23,11 +23,11 @@ import {
 } from 'react-router-dom';
 import ProtectedRoute from '../protected-route/protected-route';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from 'src/services/store';
+import { useDispatch, useSelector } from '../../services/store';
+import { getUser, getUserAuth } from '../../services/slices/userSlice';
 
 const App = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
   const backgroundLocation = location.state?.background;
@@ -35,14 +35,25 @@ const App = () => {
   const profileMatch = useMatch('/profile/orders/:number')?.params.number;
   const feedMatch = useMatch('/feed/:number')?.params.number;
   const orderNumber = profileMatch || feedMatch;
+  const isAuthenticated = useSelector(getUserAuth);
 
   const closeModal = () => {
     navigate(-1);
   };
 
   useEffect(() => {
+    // Если пользователь не авторизован, запускаем проверку статуса через getUser
+    if (!isAuthenticated) {
+      dispatch(getUser()).then(() => {
+        const lastPath = localStorage.getItem('lastPath');
+        if (isAuthenticated && lastPath) {
+          navigate(lastPath);
+        }
+      });
+    }
+    // Загрузка ингредиентов независимо от статуса аутентификации
     dispatch(fetchIngredients());
-  }, [dispatch]);
+  }, [dispatch, isAuthenticated, navigate]);
 
   return (
     <div className={styles.app}>
