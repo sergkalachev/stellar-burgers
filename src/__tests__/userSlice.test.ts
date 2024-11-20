@@ -2,17 +2,11 @@ import { expect } from '@jest/globals';
 import {
   userSlice,
   registerUser,
-  IUserState
+  IUserState,
+  initialState
 } from '../services/slices/userSlice';
 
 describe('userSlice', () => {
-  const initialState: IUserState = {
-    user: { name: '', email: '' },
-    isLoading: false,
-    isAuthenticated: false,
-    error: null
-  };
-
   const mockRegisterData = {
     email: 'test@example.com',
     name: 'Test User',

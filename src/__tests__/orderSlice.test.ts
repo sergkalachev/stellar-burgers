@@ -2,18 +2,13 @@ import { expect } from '@jest/globals';
 import {
   orderSlice,
   placeOrder,
-  clearOrderState
+  clearOrderState,
+  initialState
 } from '../services/slices/orderSlice';
 import { OrderState } from '../services/slices/orderSlice';
 import { TOrder } from '@utils-types';
 
 describe('orderSlice', () => {
-  const initialState: OrderState = {
-    orderRequest: false,
-    orderModalData: null,
-    error: undefined
-  };
-
   it('При состоянии pending: устанавливается orderRequest = true, ошибка = null', () => {
     const actualState = orderSlice.reducer(
       {

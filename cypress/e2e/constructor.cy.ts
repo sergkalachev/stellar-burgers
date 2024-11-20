@@ -1,9 +1,17 @@
+const SELECTORS = {
+  modal: '#modals',
+  bunIngredients: 'ul[data-cy="bun-ingredients"]',
+  constructorElement: '[data-cy=burger-constructor]',
+  closeModalButton: '[data-cy="modal-close-button"]',
+  overlay: '[data-cy="overlay"]'
+};
+
 describe('Добавление ингридиентов в конструктор', () => {
   beforeEach(() => {
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
     cy.intercept('GET', '/api/auth/user', { fixture: 'user.json' });
     cy.viewport(1300, 800);
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
 
   it('Добавляем ингридиенты и проверяем что они в конструкторе', () => {
@@ -24,42 +32,31 @@ describe('Проверка работы модальных окон', () => {
     cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
     cy.intercept('GET', '/api/auth/user', { fixture: 'user.json' });
     cy.viewport(1300, 800);
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
 
   it('Проверяем работу модальных окон', () => {
     // открываем модальное окно предварительно проверив имя ингридиента
-    cy.get('#modals').children().should('have.length', 0);
-    cy.get('ul[data-cy="bun-ingredients"]')
-      .find('li')
-      .first()
-      .find('p')
-      .contains('Булка1');
-    cy.get('ul[data-cy="bun-ingredients"]')
-      .find('li')
-      .first()
-      .find('a')
-      .click();
+    cy.get(SELECTORS.modal).children().should('have.length', 0);
+    cy.get(SELECTORS.bunIngredients).find('li').first().as('firstBun');
+    cy.get('@firstBun').find('p').contains('Булка1');
+    cy.get('@firstBun').find('a').click();
     // проверяем что модальное окно открыто
-    cy.get('#modals').children().should('have.length', 2);
+    cy.get(SELECTORS.modal).children().should('have.length', 2);
     // проверяем что открыт тот же ингридиент
-    cy.get('#modals').contains('Булка1');
+    cy.get(SELECTORS.modal).contains('Булка1');
     // закрываем модальное окно по кнопке
-    cy.get('[data-cy="modal-close-button"]').click();
+    cy.get(SELECTORS.closeModalButton).click();
     // проверяем что модальное окно закрыто
-    cy.get('#modals').children().should('have.length', 0);
+    cy.get(SELECTORS.modal).children().should('have.length', 0);
     // открываем модальное окно
-    cy.get('ul[data-cy="bun-ingredients"]')
-      .find('li')
-      .first()
-      .find('a')
-      .click();
+    cy.get('@firstBun').find('a').click();
     // проверяем что модальное окно открыто
-    cy.get('#modals').children().should('have.length', 2);
+    cy.get(SELECTORS.modal).children().should('have.length', 2);
     // закрываем модальное окно кликом через оверлей
-    cy.get('[data-cy="overlay"]').click('left', { force: true });
+    cy.get(SELECTORS.overlay).click('left', { force: true });
     // проверяем что модальное окно закрыто
-    cy.get('#modals').children().should('have.length', 0);
+    cy.get(SELECTORS.modal).children().should('have.length', 0);
   });
 });
 
@@ -76,7 +73,7 @@ describe('Проверка создания заказа', () => {
     );
     cy.setCookie('accessToken', 'access-token');
     cy.viewport(1300, 800);
-    cy.visit('http://localhost:4000');
+    cy.visit('/');
   });
   // зачищаем токены каждый раз
   afterEach(() => {
@@ -91,19 +88,14 @@ describe('Проверка создания заказа', () => {
     // отпроавляем заказ по кнопке
     cy.contains('Оформить заказ').click();
     // проверяем что модальное окно открылось и его параметры
-    cy.get('#modals').children().should('have.length', 2);
-    cy.get('#modals').contains('59761');
+    cy.get(SELECTORS.modal).children().should('have.length', 2);
+    cy.get(SELECTORS.modal).contains('59761');
     // закрываем модальное окно
-    cy.get('[data-cy="modal-close-button"]').click();
+    cy.get(SELECTORS.closeModalButton).click();
     // проверяем что модальное окно закрыто
-    cy.get('#modals').children().should('have.length', 0);
+    cy.get(SELECTORS.modal).children().should('have.length', 0);
     //проверяем что ингридиентов больше нет в конструкторе
-    cy.get('[data-cy=burger-constructor]')
-      .contains('Булка1')
-      .should('not.exist');
-    cy.get('[data-cy=burger-constructor]')
-      .contains('Булка1')
-      .should('not.exist');
-    cy.get('[data-cy=burger-constructor]').contains('Соус').should('not.exist');
+    cy.get(SELECTORS.constructorElement).contains('Булка1').should('not.exist');
+    cy.get(SELECTORS.constructorElement).contains('Соус').should('not.exist');
   });
 });

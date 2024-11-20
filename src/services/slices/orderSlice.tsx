@@ -9,7 +9,7 @@ export interface OrderState {
   error: string | null | undefined;
 }
 
-const initialState: OrderState = {
+export const initialState: OrderState = {
   orderRequest: false,
   orderModalData: null,
   error: undefined

@@ -1,17 +1,12 @@
 import { expect } from '@jest/globals';
 import {
   fetchIngredients,
-  ingredientsSlice
+  ingredientsSlice,
+  initialState
 } from '../services/slices/ingridientsSlice';
 import { TIngredient } from '@utils-types';
 
 describe('ingredientsSlice', () => {
-  const initialState = {
-    items: [],
-    isLoad: false,
-    error: null
-  };
-
   it('при состоянии pending isLoad = true', () => {
     const actualState = ingredientsSlice.reducer(
       {

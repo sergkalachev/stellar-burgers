@@ -1,16 +1,12 @@
 import { expect } from '@jest/globals';
-import { fetchFeeds, feedSlice } from '../services/slices/feedSlice';
+import {
+  fetchFeeds,
+  feedSlice,
+  initialState
+} from '../services/slices/feedSlice';
 import { TFeedState } from '@utils-types';
 
 describe('feedSlice', () => {
-  const initialState: TFeedState = {
-    orders: [],
-    total: 0,
-    totalToday: 0,
-    error: null,
-    isLoading: false
-  };
-
   it('При состоянии pending isLoading = true а ошибки = null', () => {
     const actualState = feedSlice.reducer(
       {
