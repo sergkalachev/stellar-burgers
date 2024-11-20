@@ -8,7 +8,7 @@ type TIngredientsState = {
   error: string | null;
 };
 
-const initialState: TIngredientsState = {
+export const initialState: TIngredientsState = {
   items: [],
   isLoad: false,
   error: null
@@ -33,6 +33,7 @@ export const ingredientsSlice = createSlice({
     builder
       .addCase(fetchIngredients.pending, (state) => {
         state.isLoad = true;
+        state.error = null;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.isLoad = false;

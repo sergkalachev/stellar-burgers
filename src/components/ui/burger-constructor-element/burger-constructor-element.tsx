@@ -10,7 +10,7 @@ import {
 import { useDispatch } from '../../../services/store';
 
 export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
-  memo(({ ingredient, index, totalItems, handleClose }) => {
+  memo(({ ingredient, index, totalItems, handleClose, ...props }) => {
     const dispatch = useDispatch();
 
     const moveUp = () => {
@@ -30,7 +30,7 @@ export const BurgerConstructorElementUI: FC<BurgerConstructorElementUIProps> =
     };
 
     return (
-      <li className={`${styles.element} mb-4 mr-2`}>
+      <li className={`${styles.element} mb-4 mr-2`} {...props}>
         <MoveButton
           handleMoveDown={moveDown}
           handleMoveUp={moveUp}
