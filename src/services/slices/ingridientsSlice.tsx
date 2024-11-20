@@ -33,6 +33,7 @@ export const ingredientsSlice = createSlice({
     builder
       .addCase(fetchIngredients.pending, (state) => {
         state.isLoad = true;
+        state.error = null;
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.isLoad = false;
